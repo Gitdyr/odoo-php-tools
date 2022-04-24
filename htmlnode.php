@@ -1,9 +1,9 @@
 <?php
 
 class HtmlNode {
-    public $nodes = array();
-    public $attributes = array();
-    public $void = array(
+    private $nodes = array();
+    private $attributes = array();
+    private $void = array(
         'area',
         'base',
         'br',
@@ -21,7 +21,7 @@ class HtmlNode {
         'track',
         'wbr'
     );
-    public $indent = '';
+    private $indent = '';
 
     public function __construct($parent = null, $tag = 'html', $text ='')
     {
@@ -96,7 +96,7 @@ class HtmlNode {
         } else {
             printf("%s<%s>\n", $this->indent, $this->tag);
         }
-        if ($this->text) {
+        if ($this->text !== '') {
             printf("%s  %s\n", $this->indent, $this->text);
         }
         foreach ($this->nodes as $node) {

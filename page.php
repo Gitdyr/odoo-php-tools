@@ -1,10 +1,15 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL | E_STRICT);
+
 include('htmlnode.php');
 include('xmlrpc.php');
 
 class Page {
     public $debug = false;
+    public $error = false;
+    public $info = false;
 
     public function Header()
     {
@@ -39,6 +44,45 @@ class Page {
 
     public function HandlePost()
     {
+        if ($_POST) {
+            if (!empty($_GET['debug'])) {
+                $this->debug = true;
+            }
+            foreach ($_POST as $key => $val) {
+                // Save cookie for more than one year
+                setcookie($key, $val, time() + 0x2000000);
+                $_COOKIE[$key] = $val;
+            }
+        }
+    }
+
+    public function InputField($div, $title, $name = null, $text = null)
+    {
+        if ($name == null) {
+            $name = strtolower($title);
+        }
+        $div = $div->Div();
+        $div->class('row mb-3');
+        $label = $div->Label($title);
+        $label->class('col-sm-4 col-form-label');
+        $label->class('text-right');
+        $idiv = $div->Div();
+        $idiv->class('col-sm-8');
+        $input = $idiv->Input();
+        $input->class('form-control');
+        $input->name($name);
+        $input->type('text');
+        $input->value($this->Cookie($name));
+        if ($text) {
+            $idiv->Div($text)->class('form-text');
+        }
+    }
+
+    public function SubmitButton($div)
+    {
+        $button = $div->Button('Submit');
+        $button->type('submit');
+        $button->class('btn btn-primary float-end');
     }
 
     public function Navigation($body)
@@ -54,6 +98,7 @@ class Page {
         $ul = $div->Ul();
         $ul->class('navbar-nav me-auto');
 
+        $this->Item($ul, 'Fields');
         $this->Item($ul, 'Search');
         $this->Item($ul, 'Read');
         $this->Item($ul, 'Write');
@@ -71,12 +116,58 @@ class Page {
             $div->style('width: 40rem;');
             $div = $div->Div();
             $div->class('card-body');
-            $div->P($this->error);
+            $div->Div($this->error);
+        } elseif ($this->info) {
+            $div = $body->Div();
+            $div->class('card mx-auto alert alert-success');
+            $div->style('width: 40rem;');
+            $div = $div->Div();
+            $div->class('card-body');
+            $div->Div($this->info);
         }
     }
 
-    public function Contents($body)
+    public function Result($body)
     {
+        if (!empty($this->response)) {
+            $div = $body->Div();
+            $div->class('card ms-2 me-2');
+            $div = $div->Div();
+            $div->class('card-body');
+            $div->H5('Results')->class('card-title');
+            $table = $div->Table();
+            $table->class('table');
+            $tr = $table->Tr();
+            $table->Th('index');
+            foreach ($this->fields as $field) {
+                $table->Th($field);
+            }
+            foreach ($this->response as $key => $row) {
+                $tr = $table->Tr();
+                $table->Td($key);
+                foreach ($this->fields as $field) {
+                    $val = @$row[$field];
+                    if (is_array($val)) {
+                        $val = sprintf('[%s]', implode(', ', $val));
+                    }
+                    $val = str_replace("\n", '<br>', $val);
+                    $table->Td($val);
+                }
+            }
+        }
+    }
+
+    public function Contents($body, $title = '')
+    {
+        $form = $body->Form();
+        $form->method('post');
+        $div = $form->Div();
+        $div->class('card mx-auto');
+        $div->style('width: 40rem;');
+        $div = $div->Div();
+        $div->class('card-body');
+        $div->H5($title)->class('card-title');
+        return $div;
     }
 
     public function Body()
@@ -147,7 +238,10 @@ class Page {
 
     public function ExecKw($model, $method, $parm_list, $parm_dict = [])
     {
-        return $this->xml_rpc->ExecKw($mode, $method, $parm_list, $parm_dict);
+        $response =
+            $this->xml_rpc->ExecKw( $model, $method, $parm_list, $parm_dict);
+        $this->error = $this->xml_rpc->error;
+        return $response;
     }
 }
 
