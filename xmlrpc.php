@@ -49,6 +49,9 @@ Class XmlRpc
             $this->HandleFaultString($response);
             return false;
         }
+        if (empty($response)) {
+            $this->error = 'Authorization failed';
+        }
         $this->uid = $response;
         return $this->uid;
     }
