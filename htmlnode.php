@@ -73,7 +73,7 @@ class HtmlNode {
         return $found;
     }
     
-    public function Clone($text)
+    public function Clone($text = '')
     {
         $node = clone $this;
         $node->text = $text;

@@ -1,0 +1,10 @@
+header {
+    margin-bottom: 20px;
+}
+
+.card-title {
+    background-color: #e0e0e0;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
