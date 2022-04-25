@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * (c) Kjeld Borch Egevang
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL | E_STRICT);
 
@@ -138,20 +145,20 @@ class Page {
             $table = $div->Table();
             $table->class('table');
             $tr = $table->Tr();
-            $table->Th('index');
+            $tr->Th('index');
             foreach ($this->fields as $field) {
-                $table->Th($field);
+                $tr->Th($field);
             }
             foreach ($this->response as $key => $row) {
                 $tr = $table->Tr();
-                $table->Td($key);
+                $tr->Td($key);
                 foreach ($this->fields as $field) {
                     $val = @$row[$field];
                     if (is_array($val)) {
                         $val = sprintf('[%s]', implode(', ', $val));
                     }
                     $val = str_replace("\n", '<br>', $val);
-                    $table->Td($val);
+                    $tr->Td($val);
                 }
             }
         }

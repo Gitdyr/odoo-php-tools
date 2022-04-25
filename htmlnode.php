@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * (c) Kjeld Borch Egevang
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 class HtmlNode {
     private $nodes = array();
     private $attributes = array();

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * (c) Kjeld Borch Egevang
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 include('page.php');
 
 class Search extends Page
@@ -58,12 +65,12 @@ class Search extends Page
             $table->class('table mx-auto w-auto');
             foreach ($this->response[0] as $key => $val) {
                 $tr = $table->Tr();
-                $table->Th($key);
+                $tr->Th($key);
                 if (is_array($val)) {
                     $val = sprintf('[%s]', implode(', ', $val));
                 }
                 $val = str_replace("\n", '<br>', $val);
-                $table->Td($val)->class('text-break');
+                $tr->Td($val)->class('text-break');
             }
         }
     }
