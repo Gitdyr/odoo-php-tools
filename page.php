@@ -223,17 +223,26 @@ class Page {
             empty($this->Cookie('company_id')))
         {
             $company = $this->Cookie('company');
-            $response = $this->xml_rpc->ExecKw(
-                'res.company',
-                'search',
-                [[['name', '=', $company]]]
-            );
+            if (trim($company)) {
+                $q = [[['name', '=', $company]]];
+            } else {
+                $q = [];
+            }
+            $f = ['fields' => ['name']];
+            $response =
+                $this->xml_rpc->ExecKw('res.company', 'search_read', $q, $f);
             if ($response) {
                 $key = 'company_id';
-                $val = reset($response);
+                $val = $response[0]['id'];
                 setcookie($key, $val, time() + 0x2000000); // More than one year
                 $_COOKIE[$key] = $val;
                 $this->xml_rpc->company_id = $val;
+                if (!trim($company)) {
+                    $key = 'company';
+                    $val = $response[0]['name'];
+                    setcookie($key, $val, time() + 0x2000000);
+                    $_COOKIE[$key] = $val;
+                }
             } else {
                 $this->error = 'Company not found: '.$company;
                 return false;
