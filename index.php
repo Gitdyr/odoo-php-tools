@@ -21,6 +21,16 @@ class Index extends Page
             You can download and install the code from GitHub:');
         $url = 'https://github.com/Gitdyr/odoo-php-tools';
         $div->A($url)->href($url);
+        $div->P();
+        $script = $div->Script();
+        $script->src('https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js');
+        $script->{'data-name'}('bmc-button');
+        $script->{'data-slug'}('gitdyr');
+        $script->{'data-color'}('#FFDD00');
+        $script->{'data-emoji'}('☕');
+        $script->{'data-font'}('Cookie');
+        $script->{'data-text'}('Buy me a coffee');
+        $script->{'data-font-color'}('#000000');
     }
 }
 
