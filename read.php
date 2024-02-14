@@ -18,13 +18,23 @@ class Search extends Page
             $model = $this->Cookie('model');
             $id = $this->Cookie('id');
             $fields = $this->Cookie('fields');
+            $res = $this->Connect();
             if ($fields) {
                 $fields = explode(',', $fields);
-                $q = [(int)$id, $fields];
             } else {
-                $q = [(int)$id, []];
+                $q = [];
+                $f = ['attributes' => []];
+                if ($res) {
+                    $fields = $this->ExecKw($model, 'fields_get', $q, $f);
+                    if (isset($fields['compute_all_tax'])) {
+                        $this->warning = 'The field compute_all_tax is ';
+                        $this->warning .= 'not shown due to a bug in Odoo';
+                        unset($fields['compute_all_tax']);
+                    }
+                    $fields = array_keys($fields);
+                }
             }
-            $res = $this->Connect();
+            $q = [(int)$id, $fields];
             if ($res) {
                 $this->response =
                     $this->ExecKw($model, 'read', $q);

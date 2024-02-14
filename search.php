@@ -27,11 +27,13 @@ class Search extends Page
             }
             if ($fields) {
                 $this->fields = explode(',', $fields);
-                $f = ['fields' => $this->fields];
             } else {
                 $this->fields = [];
-                $f = [];
             }
+            if (!in_array('id', $this->fields)) {
+                array_unshift($this->fields, 'id');
+            }
+            $f = ['fields' => $this->fields];
             $res = $this->Connect();
             if ($res) {
                 $this->response =

@@ -17,6 +17,7 @@ class Page {
     public $debug = false;
     public $error = false;
     public $info = false;
+    public $warning = false;
 
     public function Header()
     {
@@ -124,6 +125,13 @@ class Page {
             $div = $div->Div();
             $div->class('card-body');
             $div->Div($this->error);
+        } elseif ($this->warning) {
+            $div = $body->Div();
+            $div->class('card mx-auto alert alert-warning');
+            $div->style('width: 40rem;');
+            $div = $div->Div();
+            $div->class('card-body');
+            $div->Div($this->warning);
         } elseif ($this->info) {
             $div = $body->Div();
             $div->class('card mx-auto alert alert-success');
@@ -145,14 +153,11 @@ class Page {
             $table = $div->Table();
             $table->class('table');
             $tr = $table->Tr();
-            $tr->Th('id');
+            $tr->Th('index');
             foreach ($this->fields as $field) {
                 $tr->Th($field);
             }
             foreach ($this->response as $key => $row) {
-                if (isset($row['id'])) {
-                    $key = $row['id'];
-                }
                 $tr = $table->Tr();
                 $tr->Td($key);
                 foreach ($this->fields as $field) {
@@ -258,7 +263,7 @@ class Page {
     public function ExecKw($model, $method, $parm_list, $parm_dict = [])
     {
         $response =
-            $this->xml_rpc->ExecKw( $model, $method, $parm_list, $parm_dict);
+            $this->xml_rpc->ExecKw($model, $method, $parm_list, $parm_dict);
         $this->error = $this->xml_rpc->error;
         return $response;
     }
