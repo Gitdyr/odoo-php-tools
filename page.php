@@ -145,11 +145,14 @@ class Page {
             $table = $div->Table();
             $table->class('table');
             $tr = $table->Tr();
-            $tr->Th('index');
+            $tr->Th('id');
             foreach ($this->fields as $field) {
                 $tr->Th($field);
             }
             foreach ($this->response as $key => $row) {
+                if (isset($row['id'])) {
+                    $key = $row['id'];
+                }
                 $tr = $table->Tr();
                 $tr->Td($key);
                 foreach ($this->fields as $field) {
