@@ -21,8 +21,9 @@ class Index extends Page
             You can download and install the code from GitHub:');
         $url = 'https://github.com/Gitdyr/odoo-php-tools';
         $div->A($url)->href($url);
-        $div->P();
+        $div = $div->Div();
         $script = $div->Script();
+        $div->class('float-end');
         $script->src('https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js');
         $script->{'data-name'}('bmc-button');
         $script->{'data-slug'}('gitdyr');
