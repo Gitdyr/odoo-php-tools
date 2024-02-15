@@ -18,3 +18,5 @@ Generate an API key you can dispose after testing. [More information.](https://w
 
 ## License
 MIT License. Copyright (c) 2022 Kjeld Borch Egevang
+
+<a href="https://www.buymeacoffee.com/gitdyr" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 20%;width: 20%;" ></a>
